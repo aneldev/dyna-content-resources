@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("dyna-fetch"), require("jsdom"));
 	else if(typeof define === 'function' && define.amd)
-		define("dyna-ts-module-boilerplate", [], factory);
+		define("dyna-content-resources", ["dyna-fetch", "jsdom"], factory);
 	else if(typeof exports === 'object')
-		exports["dyna-ts-module-boilerplate"] = factory();
+		exports["dyna-content-resources"] = factory(require("dyna-fetch"), require("jsdom"));
 	else
-		root["dyna-ts-module-boilerplate"] = factory();
-})(this, function() {
+		root["dyna-content-resources"] = factory(root["dyna-fetch"], root["jsdom"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -83,30 +83,53 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Person = /** @class */ (function () {
-    function Person(name, age) {
-        this.name = name;
-        this.age = age;
-    }
-    Person.prototype.getName = function () {
-        return this.name;
-    };
-    Person.prototype.getAge = function () {
-        return this.age;
-    };
-    Person.prototype.get = function () {
-        return {
-            name: this.name,
-            age: this.age
-        };
-    };
-    return Person;
-}());
-exports.Person = Person;
+var fetchPublishedGoogleDoc_1 = __webpack_require__(1);
+exports.fetchPublishedGoogleDoc = fetchPublishedGoogleDoc_1.fetchPublishedGoogleDoc;
 
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var dyna_fetch_1 = __webpack_require__(2);
+var jsdom_1 = __webpack_require__(3);
+exports.fetchPublishedGoogleDoc = function (publicUrl) {
+    return dyna_fetch_1.dynaFetch(publicUrl)
+        .then(function (response) { return response.text(); })
+        .then(function (htmlText) {
+        var dom = new jsdom_1.JSDOM(htmlText);
+        var contentElement = dom.window.document.querySelector('#contents');
+        if (contentElement) {
+            return Promise.resolve(contentElement.innerHTML);
+        }
+        else {
+            return Promise.reject({
+                section: "dyna-content-resources/fetchPublishedGoogleDoc",
+                code: "1809070950",
+                message: "Resource is no longer compatible, #contents cannot be found",
+            });
+        }
+    });
+};
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("dyna-fetch");
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = require("jsdom");
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(0);
