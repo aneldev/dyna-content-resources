@@ -8,6 +8,7 @@ export const fetchPublishedGoogleDoc = (publicUrl: string): Promise<string> => {
 			const dom = new JSDOM(htmlText);
 			const contentElement: HTMLElement = dom.window.document.querySelector('#contents');
 			if (contentElement) {
+				clearContent(contentElement);
 				return Promise.resolve(contentElement.innerHTML);
 			}
 			else {
@@ -18,4 +19,32 @@ export const fetchPublishedGoogleDoc = (publicUrl: string): Promise<string> => {
 				} as IError);
 			}
 		});
+};
+
+const clearContent = (contentElement: HTMLElement): void => {
+	let pElements: HTMLElement[] = [];
+	Array(12).fill(null)
+		.forEach((value: any, index: number) => {
+			pElements = pElements.concat(Array.apply(this, contentElement.querySelectorAll(`p.c${index}`)));
+		});
+
+	pElements.forEach((element: HTMLElement) => {
+		element.style.marginRight = "0";
+		element.style.paddingRight = "0";
+	});
+
+	const imageElements: HTMLImageElement[] = Array.apply(this, contentElement.querySelectorAll('img'));
+	imageElements.forEach((imageElement: HTMLImageElement) => {
+		// image
+		imageElement.style.height = "";
+		imageElement.style.maxWidth = "100%";
+
+		// span
+		imageElement.parentElement.style.maxWidth = "100%";
+		imageElement.parentElement.style.textIndent = "0";
+		imageElement.parentElement.style.height = "";
+
+		// p
+		imageElement.parentElement.parentElement.style.textIndent = "0";
+	})
 };

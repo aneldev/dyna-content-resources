@@ -93,6 +93,7 @@ exports.fetchPublishedGoogleDoc = fetchPublishedGoogleDoc_1.fetchPublishedGoogle
 
 "use strict";
 
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var dyna_fetch_1 = __webpack_require__(2);
 var jsdom_1 = __webpack_require__(3);
@@ -103,6 +104,7 @@ exports.fetchPublishedGoogleDoc = function (publicUrl) {
         var dom = new jsdom_1.JSDOM(htmlText);
         var contentElement = dom.window.document.querySelector('#contents');
         if (contentElement) {
+            clearContent(contentElement);
             return Promise.resolve(contentElement.innerHTML);
         }
         else {
@@ -112,6 +114,31 @@ exports.fetchPublishedGoogleDoc = function (publicUrl) {
                 message: "Resource is no longer compatible, #contents cannot be found",
             });
         }
+    });
+};
+var clearContent = function (contentElement) {
+    var pElements = [];
+    Array(12).fill(null)
+        .forEach(function (value, index) {
+        pElements = pElements.concat(Array.apply(_this, contentElement.querySelectorAll("p.c" + index)));
+    });
+    pElements.forEach(function (element) {
+        element.style.marginRight = "0";
+        element.style.paddingRight = "0";
+    });
+    var imageElements = Array.apply(_this, contentElement.querySelectorAll('img'));
+    imageElements.forEach(function (imageElement) {
+        // image
+        imageElement.style.height = "";
+        imageElement.style.maxWidth = "100%";
+        // span
+        imageElement.parentElement.style.maxWidth = "100%";
+        imageElement.parentElement.style.textIndent = "0";
+        imageElement.parentElement.style.height = "";
+        // p
+        imageElement.parentElement.parentElement.style.textIndent = "0";
+        // imageElement.parentElement.parentElement.style.marginLeft = "0";
+        // imageElement.parentElement.parentElement.style.paddingLeft = "0";
     });
 };
 
