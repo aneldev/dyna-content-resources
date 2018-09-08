@@ -137,8 +137,6 @@ var clearContent = function (contentElement) {
         imageElement.parentElement.style.height = "";
         // p
         imageElement.parentElement.parentElement.style.textIndent = "0";
-        // imageElement.parentElement.parentElement.style.marginLeft = "0";
-        // imageElement.parentElement.parentElement.style.paddingLeft = "0";
     });
 };
 
